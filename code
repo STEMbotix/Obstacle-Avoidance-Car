@@ -1,0 +1,118 @@
+
+#define TRIG_PIN 17
+#define ECHO_PIN 16
+
+#define MOTOR1_PIN1 4
+#define MOTOR1_PIN2 2
+#define MOTOR2_PIN1 15
+#define MOTOR2_PIN2 13
+#define MOTOR3_PIN1 12
+#define MOTOR3_PIN2 27
+#define MOTOR4_PIN1 33
+#define MOTOR4_PIN2 18
+
+#define MOTOR_SPEED 120 // Speed value (0-255)
+
+void setup() {
+  Serial.begin(115200);
+
+  // Setup motor pins as output
+  pinMode(MOTOR1_PIN1, OUTPUT);
+  pinMode(MOTOR1_PIN2, OUTPUT);
+  pinMode(MOTOR2_PIN1, OUTPUT);
+  pinMode(MOTOR2_PIN2, OUTPUT);
+  pinMode(MOTOR3_PIN1, OUTPUT);
+  pinMode(MOTOR3_PIN2, OUTPUT);
+  pinMode(MOTOR4_PIN1, OUTPUT);
+  pinMode(MOTOR4_PIN2, OUTPUT);
+  
+  // Setup ultrasonic sensor pins
+  pinMode(TRIG_PIN, OUTPUT);
+  pinMode(ECHO_PIN, INPUT);
+}
+
+void loop() {
+  long duration, distance;
+
+  // Clear the trigger
+  digitalWrite(TRIG_PIN, LOW);
+  delayMicroseconds(2);
+  
+  // Set the trigger to HIGH for 10 microseconds
+  digitalWrite(TRIG_PIN, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG_PIN, LOW);
+  
+  // Read the echo pin
+  duration = pulseIn(ECHO_PIN, HIGH);
+  
+  // Calculate the distance in centimeters
+  distance = (duration * 0.034) / 2; // Speed of sound is 34300 cm/s
+
+  Serial.print("Distance: ");
+  Serial.println(distance);
+
+  // Obstacle avoidance logic
+  if (distance < 20) { // If an obstacle is detected within 20 cm
+    stopMotors();
+    delay(500);
+    // Reverse for a short time
+    reverseMotors();
+    delay(1000);
+    stopMotors();
+    delay(500);
+    // Turn right
+    turnRight();
+    delay(1000);
+  } else {
+    moveForward();
+  }
+}
+
+void moveForward() {
+  // Set motor direction to move forward and speed
+  analogWrite(MOTOR1_PIN1, MOTOR_SPEED);
+  analogWrite(MOTOR1_PIN2, LOW);
+  analogWrite(MOTOR2_PIN1, MOTOR_SPEED);
+  analogWrite(MOTOR2_PIN2, LOW);
+  analogWrite(MOTOR3_PIN1, MOTOR_SPEED);
+  analogWrite(MOTOR3_PIN2, LOW);
+  analogWrite(MOTOR4_PIN1, MOTOR_SPEED);
+  analogWrite(MOTOR4_PIN2, LOW);
+}
+
+void stopMotors() {
+  // Stop all motors
+  analogWrite(MOTOR1_PIN1, 0);
+  analogWrite(MOTOR1_PIN2, 0);
+  analogWrite(MOTOR2_PIN1, 0);
+  analogWrite(MOTOR2_PIN2, 0);
+  analogWrite(MOTOR3_PIN1, 0);
+  analogWrite(MOTOR3_PIN2, 0);
+  analogWrite(MOTOR4_PIN1, 0);
+  analogWrite(MOTOR4_PIN2, 0);
+}
+
+void reverseMotors() {
+  // Set motor direction to move backward and speed
+  analogWrite(MOTOR1_PIN1, LOW);
+  analogWrite(MOTOR1_PIN2, MOTOR_SPEED);
+  analogWrite(MOTOR2_PIN1, LOW);
+  analogWrite(MOTOR2_PIN2, MOTOR_SPEED);
+  analogWrite(MOTOR3_PIN1, LOW);
+  analogWrite(MOTOR3_PIN2, MOTOR_SPEED);
+  analogWrite(MOTOR4_PIN1, LOW);
+  analogWrite(MOTOR4_PIN2, MOTOR_SPEED);
+}
+
+void turnRight() {
+  // Set motors to turn right with speed
+  analogWrite(MOTOR1_PIN1, MOTOR_SPEED);
+  analogWrite(MOTOR1_PIN2, LOW);
+  analogWrite(MOTOR2_PIN1, MOTOR_SPEED);
+  analogWrite(MOTOR2_PIN2, LOW);
+  analogWrite(MOTOR3_PIN1, LOW);
+  analogWrite(MOTOR3_PIN2, LOW);
+  analogWrite(MOTOR4_PIN1, LOW);
+  analogWrite(MOTOR4_PIN2, LOW);
+}
