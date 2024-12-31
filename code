@@ -4,10 +4,10 @@
 
 #define MOTOR1_PIN1 4
 #define MOTOR1_PIN2 2
-#define MOTOR2_PIN1 15
-#define MOTOR2_PIN2 13
-#define MOTOR3_PIN1 12
-#define MOTOR3_PIN2 27
+#define MOTOR2_PIN1 13
+#define MOTOR2_PIN2 15
+#define MOTOR3_PIN1 27
+#define MOTOR3_PIN2 12
 #define MOTOR4_PIN1 33
 #define MOTOR4_PIN2 18
 
